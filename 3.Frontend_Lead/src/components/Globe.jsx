@@ -1,16 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Viewer, Entity, PolylineGraphics } from 'resium';
 import {
-  Ion,
   Cartesian3,
   SampledPositionProperty,
   JulianDate,
   PolylineGlowMaterialProperty,
   Color,
 } from 'cesium';
-import 'cesium/Build/Cesium/Widgets/widgets.css';
-
-Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI0YTg1ODA3ZC01ZDYwLTRhOWQtOWViNS03ZGVkNWUwZDM4YmIiLCJpZCI6NDUyNjkxLCJpc3MiOiJodHRwczovL2FwaS5jZXNpdW0uY29tIiwiYXVkIjoidW5kZWZpbmVkX2RlZmF1bHQiLCJpYXQiOjE3ODMyNjA5NDN9.p6FsUfCq_g3xCSmbNmwnIH4pIJ_Hw0lzxVL-fSkHibo';
 
 const MOCK_CONTRACT_B = {
   object_id: "matched-25544",
@@ -24,7 +20,11 @@ const MOCK_CONTRACT_B = {
 };
 
 function Globe() {
-  const [trajectory] = useState(MOCK_CONTRACT_B);
+  const [trajectory, setTrajectory] = useState(null);
+
+  useEffect(() => {
+    setTrajectory(MOCK_CONTRACT_B);
+  }, []);
 
   if (!trajectory) return <p style={{ color: 'white' }}>Loading trajectory...</p>;
 
@@ -39,7 +39,7 @@ function Globe() {
     const position = Cartesian3.fromDegrees(
       point.lon,
       point.lat,
-      point.alt_km * 1000
+      point.alt_km * 1000 
     );
     
     positionProperty.addSample(time, position);
