@@ -15,8 +15,9 @@ def play_video(path):
         ret, frame = cap.read()
 
         if not ret:
-            print("End of video (or read error).")
-            break
+            # End of video reached — rewind to frame 0 and keep playing
+            cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
+            continue
 
         # Feed the current frame into the model, get back the foreground mask
         fgMask = backSub.apply(frame)
